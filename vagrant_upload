@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -e
+
+echo "Déploiement des VMs GP2GP McLaren F1"
+echo "===================================="
+
+if ! command -v vagrant &> /dev/null; then
+    echo "ERREUR: Vagrant non installé"
+    exit 1
+fi
+
+if ! command -v vboxmanage &> /dev/null; then
+    echo "ERREUR: VirtualBox non installé"
+    exit 1
+fi
+
+echo "Prérequis validés"
+
+echo "Déploiement VM McLaren1 (LAMP)..."
+vagrant up mclaren1
+
+sleep 30
+
+echo "Déploiement VM McLaren2 (Docker)..."
+vagrant up mclaren2
+
+sleep 30
+
+echo "Validation des VMs..."
+vagrant status
+
+echo "Test connectivité McLaren1..."
+vagrant ssh mclaren1 -c "systemctl status apache2 mariadb"
+
+echo "Test connectivité McLaren2..."
+vagrant ssh mclaren2 -c "docker --version && docker compose version"
+
+echo ""
+echo "VMs GP2GP déployées avec succès !"
+echo "================================="
+echo "McLaren1 (LAMP) : 192.168.56.10"
+echo "McLaren2 (Docker) : 192.168.56.11"
+echo ""
+echo "Connexion :"
+echo "vagrant ssh mclaren1"
+echo "vagrant ssh mclaren2"
