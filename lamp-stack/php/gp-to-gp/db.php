@@ -2,7 +2,7 @@
 $host = 'localhost';
 $db = 'gp_to_gp';
 $user = 'root';
-$pass = 'root'; // remplace par ton vrai mot de passe
+$pass = 'root';
 
 try {
     $pdo = new PDO("mysql:host=localhost;dbname=gp_to_gp", "root", "root");
