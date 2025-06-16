@@ -1,5 +1,5 @@
 <?php
-// Intégration GP2GP : LAMP + Docker
+//Intégration GP2GP : LAMP + Docker
 header('Content-Type: text/html; charset=utf-8');
 
 function getDockerData($endpoint) {
@@ -93,15 +93,15 @@ $healthDashboard = getDockerData('/health/dashboard');
 
         <div class="card">
             <h2>Accès aux Interfaces</h2>
-            <a href="/" class="btn">🏠 Interface LAMP Principale</a>
-            <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>:8080" class="btn" target="_blank">📊 Dashboard Docker Temps Réel</a>
+            <a href="/" class="btn"> Interface LAMP Principale</a>
+            <a href="http://<?php echo $_SERVER['HTTP_HOST']; ?>:8080" class="btn" target="_blank"> Dashboard Docker Temps Réel</a>
             <a href="/phpmyadmin" class="btn">🗄️ Base de Données</a>
             <a href="javascript:location.reload()" class="btn">🔄 Actualiser</a>
         </div>
     </div>
 
     <script>
-        // Auto-refresh toutes les 5 secondes
+        //Auto-refresh toutes les 5 secondes
         setTimeout(() => location.reload(), 5000);
     </script>
 </body>
