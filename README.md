@@ -56,4 +56,23 @@ Avec les ressources disponibles (serveur personnel, outils open-source), j'ai d�
 - **Stack Web** : Apache 2.4.63, MariaDB 11.4.7, PHP 8.4.5
 - **Conteneurisation** : Docker + Docker Compose
 - **Monitoring** : Health checks automatiques
+### Interfaces Accessibles
+- **Interface LAMP** : http://localhost/gp-to-gp/
+- **Dashboard Docker** : http://localhost:8080
+- **API Télémétrie** : http://localhost:8080/api/telemetry/current
 
+### Métriques Validées
+- **Latence API** : < 100ms
+- **Consommation totale** : 358.94 MB
+- **Déploiement** : 8-10 minutes
+- **Ports actifs** : 80, 3306, 8080
+
+## Structure du Projet
+
+gp2gp-infrastructure/
+├── docs/ # Documentation technique
+├── lamp-stack/ # Configuration LAMP
+├── docker-services/ # Services conteneurisés
+├── vagrant/ # VMs de développement
+├── monitoring/ # Scripts de surveillance
+└── deployment/ # Scripts de déploiement
