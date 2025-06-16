@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GP2GP Dashboard - McLaren F1</title>
+    <style>
+        body { 
+            font-family: 'Arial', sans-serif; 
+            background: #1a1a1a; 
+            color: #fff; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #ff8c00; 
+            padding-bottom: 20px; 
+        }
+        .container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
+        .card { 
+            background: #2d2d2d; 
+            border-radius: 10px; 
+            padding: 20px; 
+            border-left: 4px solid #ff8c00; 
+        }
+        .metric { 
+            font-size: 2em; 
+            font-weight: bold; 
+            color: #ff8c00; 
+        }
+        .status-ok { color: #4CAF50; }
+        .status-warning { color: #FF9800; }
+        .timestamp { 
+            font-size: 0.8em; 
+            color: #888; 
+            margin-top: 10px; 
+        }
+        .tire-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .tire {
+            background: #3d3d3d;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏎️ GP2GP Edge Computing Dashboard</h1>
+        <h2>McLaren F1 - Système de Monitoring Temps Réel</h2>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h3>Vitesse</h3>
+            <div class="metric" id="speed">-- km/h</div>
+            <div class="timestamp" id="speed-time"></div>
+        </div>
+
+        <div class="card">
+            <h3>Régime Moteur</h3>
+            <div class="metric" id="rpm">-- RPM</div>
+            <div class="timestamp" id="rpm-time"></div>
+        </div>
+
+        <div class="card">
+            <h3>DRS Status</h3>
+            <div class="metric" id="drs">--</div>
+            <div class="timestamp" id="drs-time"></div>
+        </div>
+
+        <div class="card">
+            <h3>Rapport Actuel</h3>
+            <div class="metric" id="gear">--</div>
+            <div class="timestamp" id="gear-time"></div>
+        </div>
+
+        <div class="card">
+            <h3>Pression Pneumatiques (bar)</h3>
+            <div class="tire-grid">
+                <div class="tire">
+                    <strong>Avant G</strong><br>
+                    <span id="tire-fl">--</span>
+                </div>
+                <div class="tire">
+                    <strong>Avant D</strong><br>
+                    <span id="tire-fr">--</span>
+                </div>
+                <div class="tire">
+                    <strong>Arrière G</strong><br>
+                    <span id="tire-rl">--</span>
+                </div>
+                <div class="tire">
+                    <strong>Arrière D</strong><br>
+                    <span id="tire-rr">--</span>
+                </div>
+            </div>
+            <div class="timestamp" id="tire-time"></div>
+        </div>
+
+        <div class="card">
+            <h3>Temps Secteur</h3>
+            <div class="metric" id="sector">-- s</div>
+            <div class="timestamp" id="sector-time"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateDashboard() {
+            fetch('/api/dashboard/data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Erreur:', data.error);
+                        return;
+                    }
+
+                    const telemetry = data.data;
+                    const timestamp = new Date(telemetry.timestamp).toLocaleTimeString();
+
+                    document.getElementById('speed').textContent = telemetry.speed + ' km/h';
+                    document.getElementById('speed-time').textContent = timestamp;
+
+                    document.getElementById('rpm').textContent = telemetry.rpm.toLocaleString() + ' RPM';
+                    document.getElementById('rpm-time').textContent = timestamp;
+
+                    const drsElement = document.getElementById('drs');
+                    drsElement.textContent = telemetry.drs_status;
+                    drsElement.className = telemetry.drs_status === 'OPEN' ? 'metric status-warning' : 'metric status-ok';
+                    document.getElementById('drs-time').textContent = timestamp;
+
+                    document.getElementById('gear').textContent = telemetry.gear;
+                    document.getElementById('gear-time').textContent = timestamp;
+
+                    document.getElementById('tire-fl').textContent = telemetry.tire_pressure.front_left;
+                    document.getElementById('tire-fr').textContent = telemetry.tire_pressure.front_right;
+                    document.getElementById('tire-rl').textContent = telemetry.tire_pressure.rear_left;
+                    document.getElementById('tire-rr').textContent = telemetry.tire_pressure.rear_right;
+                    document.getElementById('tire-time').textContent = timestamp;
+
+                    document.getElementById('sector').textContent = telemetry.sector_time + ' s';
+                    document.getElementById('sector-time').textContent = timestamp;
+                })
+                .catch(error => {
+                    console.error('Erreur de connexion:', error);
+                });
+        }
+
+        setInterval(updateDashboard, 1000);
+        updateDashboard();
+    </script>
+</body>
+</html>

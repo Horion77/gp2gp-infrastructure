@@ -1,0 +1,13 @@
+{
+  "name": "gp2gp-telemetry",
+  "version": "1.0.0",
+  "description": "Service de simulation télémétrique F1",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

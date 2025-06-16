@@ -1,0 +1,46 @@
+
+services:
+  telemetry-service:
+    build: ./telemetry-service
+    container_name: gp2gp-telemetry
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - gp2gp-network
+
+  dashboard-service:
+    build: ./dashboard-service
+    container_name: gp2gp-dashboard
+    environment:
+      - FLASK_ENV=production
+    depends_on:
+      - telemetry-service
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - gp2gp-network
+
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: gp2gp-proxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-config/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - telemetry-service
+      - dashboard-service
+    networks:
+      - gp2gp-network
+
+networks:
+  gp2gp-network:
+    driver: bridge
