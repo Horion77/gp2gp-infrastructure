@@ -67,12 +67,4 @@ Avec les ressources disponibles (serveur personnel, outils open-source), j'ai d�
 - **Déploiement** : 8-10 minutes
 - **Ports actifs** : 80, 3306, 8080
 
-## Structure du Projet
 
-gp2gp-infrastructure/
-├── docs/ # Documentation technique
-├── lamp-stack/ # Configuration LAMP
-├── docker-services/ # Services conteneurisés
-├── vagrant/ # VMs de développement
-├── monitoring/ # Scripts de surveillance
-└── deployment/ # Scripts de déploiement
